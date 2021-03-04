@@ -9,15 +9,13 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.eai.idss.model.User;
 import com.eai.idss.repository.UserRepository;
@@ -35,10 +33,11 @@ public class IDSSUserController {
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
 	@RequestMapping(method = RequestMethod.GET, value = "/admin/user-list", produces = "application/json")
-	public ResponseEntity<List<User>> getMasterData() throws IOException {
+	public ResponseEntity<List<User>> getMasterData(Pageable pageable) throws IOException {
     	List<User> userDetails = null;
 	    try {
-	    	userDetails = userRepository.findAll();
+			Page<User> userData = userRepository.findAll(pageable);
+			userDetails = userData.toList();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity("Exception in userDetails", HttpStatus.INTERNAL_SERVER_ERROR);
