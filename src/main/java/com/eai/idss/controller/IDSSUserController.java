@@ -1,17 +1,24 @@
 package com.eai.idss.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.eai.idss.service.UserService;
+import com.eai.idss.vo.UserResponseVO;
+import com.mongodb.client.MongoClient;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.repository.support.PageableExecutionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -31,18 +38,33 @@ public class IDSSUserController {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
+	@Autowired
+	private UserService userService;
+
+	@Autowired
+	MongoTemplate mongoTemplate;
+
     @SuppressWarnings({ "rawtypes", "unchecked" })
 	@RequestMapping(method = RequestMethod.GET, value = "/admin/user-list", produces = "application/json")
-	public ResponseEntity<List<User>> getMasterData(Pageable pageable) throws IOException {
-    	List<User> userDetails = null;
+	public ResponseEntity<UserResponseVO> getMasterData(Pageable pageable) throws IOException {
+		UserResponseVO userDetails = new UserResponseVO();
 	    try {
-			Page<User> userData = userRepository.findAll(pageable);
-			userDetails = userData.toList();
+			Query query = new Query().with(pageable);
+			Query queryCnt = new Query();
+			queryCnt.addCriteria(Criteria.where("isActive").is(true));
+			userDetails.setTotalRecords(mongoTemplate.count(queryCnt, User.class));
+
+			query.addCriteria(Criteria.where("isActive").is(true));
+			List<User> userList = mongoTemplate.find(query, User.class);
+			Page<User> imPage = PageableExecutionUtils.getPage(userList, pageable,
+					() -> mongoTemplate.count(query, User.class));
+			userDetails.setUserList(imPage.toList());
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity("Exception in userDetails", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-	    return new ResponseEntity<List<User>>(userDetails,HttpStatus.OK);
+	    return new ResponseEntity<UserResponseVO>(userDetails,HttpStatus.OK);
 	}
     
     @RequestMapping(method = RequestMethod.PUT, value = "/admin/user", produces = "application/json")
@@ -138,18 +160,14 @@ public class IDSSUserController {
 	    return responseEntity;
 	}
     
-    @RequestMapping(method = RequestMethod.DELETE, value = "/admin/user/{userName}", produces = "application/json")
-	public ResponseEntity<String> deleteUser(@PathVariable String userName) throws IOException {
-	    ResponseEntity<String> responseEntity = null;
+    @RequestMapping(method = RequestMethod.DELETE, value = "/admin/user", produces = "application/json")
+	public List<String> deleteUser(@RequestParam(required = true) List<String>  userNames) throws IOException {
+	    List<String> responseEntity = new ArrayList<>();
 	    try {
-	    	long cnt = userRepository.deleteByUserName(userName);
-	    	if(cnt==0)
-	    		responseEntity = new ResponseEntity<String>("User Not found", HttpStatus.NOT_FOUND);
-	    	else 
-	    		responseEntity = new ResponseEntity<String>("Successfully removed user", HttpStatus.OK);
+			List<String> userDeleted = userService.deleteByUserName(userNames);
+			responseEntity =userDeleted;
 		} catch (Exception e) {
 			e.printStackTrace();
-			responseEntity = new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR.name(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	    return responseEntity;
 	}
