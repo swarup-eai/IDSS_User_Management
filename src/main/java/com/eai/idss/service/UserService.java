@@ -4,4 +4,5 @@ import java.util.List;
 
 public interface UserService {
     public List<String> deleteByUserName(List<String> userNames);
+    public String updateForgotPassword(String userId);
 }

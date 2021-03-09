@@ -188,5 +188,20 @@ public class IDSSUserController {
 		}
 	    
 	}
-    
+	@RequestMapping(method = RequestMethod.POST, value = "/forgotPassword", produces = "application/json")
+	public ResponseEntity<String> updateForgotPassword(@RequestParam(required = true) String userName) {
+
+		String userPwd = null;
+		try {
+			userPwd = userService.updateForgotPassword(userName);
+			if(userPwd =="false"){
+				return new ResponseEntity<String>("User does not exits.",HttpStatus.NOT_FOUND);
+			}
+			return new ResponseEntity<String>(userPwd,HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity(new User(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+	}
 }
