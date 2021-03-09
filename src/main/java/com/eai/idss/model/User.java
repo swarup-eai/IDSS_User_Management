@@ -21,6 +21,7 @@ public class User {
 	private String subRegion;
 	private Long phoneNumber;
 	private String name;
+	private boolean isFirstTimeLogin;
 	public String getUserName() {
 		return userName;
 	}
@@ -88,6 +89,10 @@ public class User {
 	}
 	public void setSubRegion(String subRegion) {
 		this.subRegion = subRegion;
+	}
+	public boolean isFirstTimeLogin(){return isFirstTimeLogin;}
+	public void setFirstTimeLogin(boolean isFirstTimeLogin){
+		this.isFirstTimeLogin = isFirstTimeLogin;
 	}
 	
 }

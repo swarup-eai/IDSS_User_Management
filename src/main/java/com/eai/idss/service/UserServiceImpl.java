@@ -3,8 +3,7 @@ package com.eai.idss.service;
 import com.eai.idss.model.User;
 import com.eai.idss.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +14,9 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
     public List<String> deleteByUserName(List<String> userNames) {
@@ -29,6 +31,23 @@ public class UserServiceImpl implements UserService {
                 return "User Not found";
 			}).collect(Collectors.toList());
             return userDeactivatedList;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public String updateForgotPassword(String userId) {
+        try {
+         User user = userRepository.findByUserName(userId);
+         if(null !=user){
+             int pwd =  (int)(Math.floor(100000 + Math.random() * 900000));
+             user.setPassword(bCryptPasswordEncoder.encode("Mpcb@"+pwd));
+             userRepository.save(user);
+             return "Mpcb@"+pwd;
+         }
+         return "false";
         } catch (Exception e) {
             e.printStackTrace();
         }
