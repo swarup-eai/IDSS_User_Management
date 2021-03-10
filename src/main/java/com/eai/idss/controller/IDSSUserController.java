@@ -93,6 +93,7 @@ public class IDSSUserController {
 	    		return new ResponseEntity<String>("User Not Found.", HttpStatus.INTERNAL_SERVER_ERROR);
 	    	
 	    	dbUserDetails.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+			dbUserDetails.setFirstTimeLogin(user.isFirstTimeLogin());
 			userRepository.save(dbUserDetails);
 	    		
 	    	responseEntity = new ResponseEntity<String>("Password updated successfully.", HttpStatus.OK);
