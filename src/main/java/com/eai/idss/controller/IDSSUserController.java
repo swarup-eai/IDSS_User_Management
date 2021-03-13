@@ -6,9 +6,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.eai.idss.service.UserService;
-import com.eai.idss.vo.UserResponseVO;
-import com.mongodb.client.MongoClient;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
@@ -22,10 +19,19 @@ import org.springframework.data.repository.support.PageableExecutionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.eai.idss.model.User;
 import com.eai.idss.repository.UserRepository;
+import com.eai.idss.service.UserService;
+import com.eai.idss.util.SendEmail;
+import com.eai.idss.vo.UserResponseVO;
 
 
 @RestController
@@ -202,6 +208,19 @@ public class IDSSUserController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity(new User(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+	}
+	
+	@RequestMapping(method = RequestMethod.POST, value = "/password-send-email", produces = "application/json")
+	public ResponseEntity<String> sendUserPasswordEmail(@RequestParam(required = true) String userName,@RequestParam(required = true) String password) {
+
+		try {
+			SendEmail.sendmail(userName, password);
+			return new ResponseEntity<String>("Password email sent successfully to user "+userName,HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity("Error sending password email to user "+userName, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 	}

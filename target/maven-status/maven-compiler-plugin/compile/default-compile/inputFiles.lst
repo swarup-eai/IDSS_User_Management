@@ -1,8 +1,12 @@
 E:\Project work\Elixir\project\ips_api\idss_api\src\main\java\com\eai\idss\configuration\SwaggerConfig.java
 E:\Project work\Elixir\project\ips_api\idss_api\src\main\java\com\eai\idss\model\User.java
 E:\Project work\Elixir\project\ips_api\idss_api\src\main\java\com\eai\idss\configuration\WebSecurityConfiguration.java
+E:\Project work\Elixir\project\ips_api\idss_api\src\main\java\com\eai\idss\service\UserServiceImpl.java
 E:\Project work\Elixir\project\ips_api\idss_api\src\main\java\com\eai\idss\configuration\SecurityConfiguration.java
+E:\Project work\Elixir\project\ips_api\idss_api\src\main\java\com\eai\idss\service\UserService.java
 E:\Project work\Elixir\project\ips_api\idss_api\src\main\java\com\eai\idss\repository\UserRepository.java
 E:\Project work\Elixir\project\ips_api\idss_api\src\main\java\com\eai\idss\IDSSApiApplication.java
 E:\Project work\Elixir\project\ips_api\idss_api\src\main\java\com\eai\idss\service\LoginUserDetailsService.java
 E:\Project work\Elixir\project\ips_api\idss_api\src\main\java\com\eai\idss\controller\IDSSUserController.java
+E:\Project work\Elixir\project\ips_api\idss_api\src\main\java\com\eai\idss\util\SendEmail.java
+E:\Project work\Elixir\project\ips_api\idss_api\src\main\java\com\eai\idss\vo\UserResponseVO.java
