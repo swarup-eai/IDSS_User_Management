@@ -44,6 +44,7 @@ public class IDSSUserController {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
+
 	@Autowired
 	private UserService userService;
 
@@ -137,9 +138,10 @@ public class IDSSUserController {
 	    	if(null!=userDetails) {
 	    		return  new ResponseEntity<String>("User Already Exist!", HttpStatus.INTERNAL_SERVER_ERROR);
 	    	}
-	    	user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+			sendUserPasswordEmail(user.getUserName(),user.getPassword());
+			user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 	    	userRepository.save(user);
-	    	
+
 	    	responseEntity = new ResponseEntity<String>("Successfully created user", HttpStatus.CREATED);
 		} catch (Exception e) {
 			e.printStackTrace();
