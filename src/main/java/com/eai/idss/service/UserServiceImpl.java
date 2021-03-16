@@ -2,6 +2,7 @@ package com.eai.idss.service;
 
 import com.eai.idss.model.User;
 import com.eai.idss.repository.UserRepository;
+import com.eai.idss.util.SendEmail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -43,9 +44,11 @@ public class UserServiceImpl implements UserService {
          User user = userRepository.findByUserName(userId);
          if(null !=user){
              int pwd =  (int)(Math.floor(100000 + Math.random() * 900000));
-             user.setPassword(bCryptPasswordEncoder.encode("Mpcb@"+pwd));
+             String password = "Mpcb@"+pwd;
+             user.setPassword(bCryptPasswordEncoder.encode(password));
              userRepository.save(user);
-             return "Mpcb@"+pwd;
+             SendEmail.sendmail(userId, password);
+             return password;
          }
          return "false";
         } catch (Exception e) {
