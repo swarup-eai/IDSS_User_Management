@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.eai.idss.vo.ForgotPasswordVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
@@ -198,18 +199,21 @@ public class IDSSUserController {
 	    
 	}
 	@RequestMapping(method = RequestMethod.POST, value = "/forgotPassword", produces = "application/json")
-	public ResponseEntity<String> updateForgotPassword(@RequestParam(required = true) String userName) {
-
+	public ResponseEntity<ForgotPasswordVO> updateForgotPassword(@RequestParam(required = true) String userName) {
+		ForgotPasswordVO forgotPasswordVO = new ForgotPasswordVO();
 		String userPwd = null;
 		try {
 			userPwd = userService.updateForgotPassword(userName);
 			if(userPwd =="false"){
-				return new ResponseEntity<String>("User does not exits.",HttpStatus.NOT_FOUND);
+				forgotPasswordVO.setName("User does not exits.");
+				return new ResponseEntity<ForgotPasswordVO>(forgotPasswordVO,HttpStatus.OK);
+
 			}
-			return new ResponseEntity<String>(userPwd,HttpStatus.OK);
+			forgotPasswordVO.setName(userPwd);
+			return new ResponseEntity<ForgotPasswordVO>(forgotPasswordVO,HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return new ResponseEntity(new User(), HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity(new ForgotPasswordVO(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 	}
