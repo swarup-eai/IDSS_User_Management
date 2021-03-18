@@ -187,7 +187,7 @@ public class IDSSUserController {
 		
 		User userDetails = null;
 	    try {
-	    	userDetails = userRepository.findByUserName(userName);
+	    	userDetails = userRepository.findByUserNameAndIsActive(userName,true);
 	    	if(null!=userDetails)
 	    		return new ResponseEntity<User>(userDetails,HttpStatus.OK);
 	    	else
