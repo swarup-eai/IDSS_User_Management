@@ -6,6 +6,7 @@ com\eai\idss\service\LoginUserDetailsService.class
 com\eai\idss\util\SendEmail.class
 com\eai\idss\IDSSApiApplication.class
 com\eai\idss\configuration\WebSecurityConfiguration.class
+com\eai\idss\vo\ForgotPasswordVO.class
 com\eai\idss\controller\IDSSUserController.class
 com\eai\idss\vo\UserResponseVO.class
 com\eai\idss\service\UserService.class
