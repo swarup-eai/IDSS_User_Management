@@ -8,8 +8,6 @@ import org.springframework.stereotype.Repository;
 
 import com.eai.idss.model.User;
 
-import java.util.List;
-
 @Repository
 public interface UserRepository extends MongoRepository<User, String> {
 
@@ -19,6 +17,6 @@ public interface UserRepository extends MongoRepository<User, String> {
 
     Page<User> findByIsActive(boolean isActive, Pageable page);
 
-
+    User findByUserNameAndIsActive(String name,boolean isActive);
 
 }
