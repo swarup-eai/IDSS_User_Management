@@ -230,4 +230,23 @@ public class IDSSUserController {
 		}
 
 	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "/user/{userName}", produces = "application/json")
+	public ResponseEntity<ForgotPasswordVO> findByUserId(@PathVariable String userName) {
+
+		ForgotPasswordVO forgotPasswordVO = new ForgotPasswordVO();
+		try {
+			User userDetails = userRepository.findByUserNameAndIsActive(userName,true);
+			if(null != userDetails){
+				forgotPasswordVO.setName("true");
+			}else{
+				forgotPasswordVO.setName("false");
+			}
+			return new ResponseEntity<ForgotPasswordVO>(forgotPasswordVO,HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity(new User(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+	}
 }
